@@ -1,0 +1,274 @@
+/* =========================
+   RESET
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* =========================
+   BODY
+========================= */
+
+body{
+    background:#3b3b3b;
+    color:white;
+    font-family:Arial, Helvetica, sans-serif;
+    text-align:center;
+    overflow-x:hidden;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+h1{
+    margin:20px 0;
+    font-size:clamp(24px,4vw,40px);
+}
+
+/* =========================
+   FLOORPLAN
+========================= */
+
+.floorplan-wrapper{
+    position:relative;
+    width:min(95vw,1200px);
+    margin:0 auto;
+}
+
+.floorplan{
+    display:block;
+    width:100%;
+    height:auto;
+    user-select:none;
+    -webkit-user-drag:none;
+}
+
+/* =========================
+   HOTSPOTS
+========================= */
+
+.dot{
+
+    position:absolute;
+
+    width:56px;
+    height:56px;
+
+    border-radius:50%;
+
+    background:#617d8b;
+
+    border:3px solid white;
+
+    cursor:pointer;
+
+    transform:translate(-50%,-50%);
+
+    opacity:.85;
+
+    z-index:10;
+
+    transition:transform .2s ease;
+
+    touch-action:manipulation;
+
+    animation:pulse 2s infinite;
+
+}
+
+/* Hover only on desktop */
+
+@media (hover:hover){
+
+.dot:hover{
+
+    transform:translate(-50%,-50%) scale(1.2);
+
+}
+
+}
+
+/* Pulse animation */
+
+@keyframes pulse{
+
+0%{
+box-shadow:0 0 0 0 rgba(255,255,255,.7);
+}
+
+70%{
+box-shadow:0 0 0 18px rgba(255,255,255,0);
+}
+
+100%{
+box-shadow:0 0 0 0 rgba(255,255,255,0);
+}
+
+}
+
+/* =========================
+   ROOM POSITIONS
+========================= */
+
+.living{
+    top:38%;
+    left:60%;
+}
+
+.kitchen{
+    top:32%;
+    left:43%;
+}
+
+.bedroom{
+    top:82%;
+    left:62%;
+}
+
+.bathroom{
+    top:80%;
+    left:34%;
+}
+
+/* =========================
+   PANORAMA
+========================= */
+
+#panorama-view{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    width:100%;
+
+    height:100dvh;
+
+    background:black;
+
+    z-index:99999;
+
+}
+
+#panorama{
+
+    width:100%;
+
+    height:100%;
+
+}
+
+#panorama-view button{
+
+    position:absolute;
+
+    top:calc(env(safe-area-inset-top) + 15px);
+
+    left:15px;
+
+    z-index:999999;
+
+    padding:14px 20px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:white;
+
+    color:black;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.35);
+
+}
+
+/* =========================
+   TABLETS
+========================= */
+
+@media (max-width:900px){
+
+.dot{
+
+    width:60px;
+    height:60px;
+
+}
+
+}
+
+/* =========================
+   PHONES
+========================= */
+
+@media (max-width:600px){
+
+body{
+
+    padding:10px;
+
+}
+
+h1{
+
+    font-size:28px;
+
+    margin:15px 0;
+
+}
+
+.floorplan-wrapper{
+
+    width:100%;
+
+}
+
+.dot{
+
+    width:64px;
+    height:64px;
+
+}
+
+#panorama-view button{
+
+    font-size:18px;
+
+    padding:14px 18px;
+
+}
+
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width:400px){
+
+.dot{
+
+    width:70px;
+    height:70px;
+
+}
+
+h1{
+
+    font-size:24px;
+
+}
+
+}
