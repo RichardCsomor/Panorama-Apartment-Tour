@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Apartment Tour</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.css">
+
+<script src="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.js"></script>
+
+</head>
+
+
+<body>
+
+
+<h1>SO-05 Bytový Dom</h1>
+
+
+<div class="floorplan-wrapper">
+
+
+<img class="floorplan" src="images/floorplan.png">
+
+
+<!-- DOTS -->
+
+<div class="dot living"
+onclick="openPanorama('images/livingroom-panorama.jpg')">
+</div>
+
+
+<div class="dot kitchen"
+onclick="openPanorama('images/kitchen-panorama.jpg')">
+</div>
+
+
+<div class="dot bedroom"
+onclick="openPanorama('images/bedroom-panorama.jpg')">
+</div>
+
+
+<div class="dot bathroom"
+onclick="openPanorama('images/bathroom-panorama.jpg')">
+</div>
+
+
+</div>
+
+
+
+<div id="panorama-view">
+
+
+<button onclick="closePanorama()">
+← Back
+</button>
+
+
+<div id="panorama"></div>
+
+
+</div>
+
+
+
+<script>
+
+
+let viewer = null;
+
+
+
+function openPanorama(image){
+
+
+document.getElementById("panorama-view").style.display="block";
+
+
+
+if(viewer){
+
+viewer.destroy();
+
+}
+
+
+
+viewer = pannellum.viewer("panorama", {
+
+
+type:"equirectangular",
+
+
+panorama:image,
+
+
+autoLoad:true,
+
+
+showControls:true,
+
+
+mouseZoom:true
+
+
+});
+
+
+setTimeout(()=>{
+
+viewer.resize();
+
+},500);
+
+
+}
+
+
+
+
+function closePanorama(){
+
+
+document.getElementById("panorama-view").style.display="none";
+
+
+if(viewer){
+
+viewer.destroy();
+
+viewer=null;
+
+}
+
+
+}
+
+
+
+</script>
+
+
+</body>
+
+</html>
