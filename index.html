@@ -7,9 +7,164 @@
 
 <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.css">
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.css"
+>
 
-<script src="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.js"></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.js">
+</script>
+
+
+<style>
+
+/* =================================================
+   APARTMENT SELECTOR
+================================================= */
+
+.apartment-selector{
+
+    width:min(95vw,1200px);
+
+    margin:30px auto 40px;
+
+    text-align:left;
+
+}
+
+
+.apartment-selector h2{
+
+    font-size:20px;
+
+    margin-bottom:15px;
+
+}
+
+
+.apartment-list{
+
+    display:flex;
+
+    gap:12px;
+
+    overflow-x:auto;
+
+    padding:5px 5px 15px;
+
+    scroll-behavior:smooth;
+
+}
+
+
+.apartment-list::-webkit-scrollbar{
+
+    height:7px;
+
+}
+
+
+.apartment-list::-webkit-scrollbar-thumb{
+
+    background:#777;
+
+    border-radius:10px;
+
+}
+
+
+.apartment{
+
+    flex:0 0 150px;
+
+    height:105px;
+
+    border:3px solid transparent;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    background:#222;
+
+    cursor:pointer;
+
+    opacity:.55;
+
+    transition:.2s ease;
+
+}
+
+
+.apartment:hover{
+
+    opacity:.85;
+
+    transform:translateY(-3px);
+
+}
+
+
+.apartment.active{
+
+    opacity:1;
+
+    border-color:white;
+
+    transform:translateY(-4px);
+
+}
+
+
+.apartment img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+}
+
+
+.apartment-label{
+
+    margin-bottom:6px;
+
+    color:#aaa;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+}
+
+
+@media(max-width:600px){
+
+    .apartment-selector{
+
+        width:100%;
+
+        margin-top:25px;
+
+    }
+
+
+    .apartment{
+
+        flex:0 0 125px;
+
+        height:90px;
+
+    }
+
+}
+
+</style>
 
 </head>
 
@@ -20,48 +175,125 @@
 <h1>SO-05 Bytový Dom</h1>
 
 
+
+<!-- =================================================
+     MAIN FLOORPLAN
+================================================= -->
+
 <div class="floorplan-wrapper">
 
-
-<img class="floorplan" src="floorplan.png">
-
-
-<!-- DOTS -->
-
-<div class="dot living"
-onclick="openPanorama('livingroom-panorama.jpg')">
-</div>
-
-
-<div class="dot kitchen"
-onclick="openPanorama('kitchen-panorama.jpg')">
-</div>
-
-
-<div class="dot bedroom"
-onclick="openPanorama('bedroom-panorama.jpg')">
-</div>
-
-
-<div class="dot bathroom"
-onclick="openPanorama('bathroom-panorama.jpg')">
-</div>
-
+    <img
+        id="floorplan"
+        class="floorplan"
+        src="floorplans/floorplan-01.png"
+        alt="Apartment floorplan"
+    >
 
 </div>
 
 
+
+<!-- =================================================
+     APARTMENT SELECTOR
+================================================= -->
+
+<div class="apartment-selector">
+
+    <div class="apartment-label">
+        APARTMENTS
+    </div>
+
+
+    <h2>
+        Choose Apartment
+    </h2>
+
+
+    <div
+        id="apartment-list"
+        class="apartment-list"
+    >
+
+        <div
+            class="apartment active"
+            onclick="selectApartment(1)"
+        >
+            <img src="floorplans/floorplan-01.png">
+        </div>
+
+
+        <div
+            class="apartment"
+            onclick="selectApartment(2)"
+        >
+            <img src="floorplans/floorplan-02.png">
+        </div>
+
+
+        <div
+            class="apartment"
+            onclick="selectApartment(3)"
+        >
+            <img src="floorplans/floorplan-03.png">
+        </div>
+
+
+        <div
+            class="apartment"
+            onclick="selectApartment(4)"
+        >
+            <img src="floorplans/floorplan-04.png">
+        </div>
+
+
+        <div
+            class="apartment"
+            onclick="selectApartment(5)"
+        >
+            <img src="floorplans/floorplan-05.png">
+        </div>
+
+
+        <div
+            class="apartment"
+            onclick="selectApartment(6)"
+        >
+            <img src="floorplans/floorplan-06.png">
+        </div>
+
+
+        <div
+            class="apartment"
+            onclick="selectApartment(7)"
+        >
+            <img src="floorplans/floorplan-07.png">
+        </div>
+
+
+        <div
+            class="apartment"
+            onclick="selectApartment(8)"
+        >
+            <img src="floorplans/floorplan-08.png">
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =================================================
+     PANORAMA
+================================================= -->
 
 <div id="panorama-view">
 
+    <button onclick="closePanorama()">
+        ← Back
+    </button>
 
-<button onclick="closePanorama()">
-← Back
-</button>
-
-
-<div id="panorama"></div>
-
+    <div id="panorama"></div>
 
 </div>
 
@@ -69,6 +301,515 @@ onclick="openPanorama('bathroom-panorama.jpg')">
 
 <script>
 
+/* =================================================
+   APARTMENT DATA
+================================================= */
+
+
+/*
+   Every apartment has:
+
+   1 floorplan
+
+   4 dots
+
+   4 separate panoramas
+
+
+   Change TOP and LEFT to move
+   each individual dot.
+*/
+
+
+const apartments = {
+
+
+    /* =================================================
+       SO-01
+    ================================================= */
+
+    1: {
+
+        floorplan:
+            "floorplans/floorplan-01.png",
+
+
+        living: {
+
+            top:55,
+
+            left:50,
+
+            panorama:
+                "panoramas/so-01-livingroom.jpg"
+
+        },
+
+
+        kitchen: {
+
+            top:35,
+
+            left:27,
+
+            panorama:
+                "panoramas/so-01-kitchen.jpg"
+
+        },
+
+
+        bedroom: {
+
+            top:40,
+
+            left:66,
+
+            panorama:
+                "panoramas/so-01-bedroom.jpg"
+
+        },
+
+
+        bathroom: {
+
+            top:80,
+
+            left:25,
+
+            panorama:
+                "panoramas/so-01-bathroom.jpg"
+
+        }
+
+    },
+
+
+    /* =================================================
+       SO-02
+    ================================================= */
+
+    2: {
+
+        floorplan:
+            "floorplans/floorplan-02.png",
+
+
+        living: {
+
+            top:38,
+
+            left:60,
+
+            panorama:
+                "panoramas/so-02-livingroom.jpg"
+
+        },
+
+
+        kitchen: {
+
+            top:32,
+
+            left:43,
+
+            panorama:
+                "panoramas/so-02-kitchen.jpg"
+
+        },
+
+
+        bedroom: {
+
+            top:82,
+
+            left:62,
+
+            panorama:
+                "panoramas/so-02-bedroom.jpg"
+
+        },
+
+
+        bathroom: {
+
+            top:80,
+
+            left:34,
+
+            panorama:
+                "panoramas/so-02-bathroom.jpg"
+
+        }
+
+    },
+
+
+    /* =================================================
+       SO-03
+    ================================================= */
+
+    3: {
+
+        floorplan:
+            "floorplans/floorplan-03.png",
+
+
+        living: {
+
+            top:50,
+
+            left:65,
+
+            panorama:
+                "panoramas/so-03-livingroom.jpg"
+
+        },
+
+
+        kitchen: {
+
+            top:65,
+
+            left:43,
+
+            panorama:
+                "panoramas/so-03-kitchen.jpg"
+
+        },
+
+
+        bedroom: {
+
+            top:19,
+
+            left:62,
+
+            panorama:
+                "panoramas/so-03-bedroom.jpg"
+
+        },
+
+
+        bathroom: {
+
+            top:19,
+
+            left:35,
+
+            panorama:
+                "panoramas/so-03-bathroom.jpg"
+
+        }
+
+    },
+
+
+    /* =================================================
+       SO-04
+    ================================================= */
+
+    4: {
+
+        floorplan:
+            "floorplans/floorplan-04.png",
+
+
+        living: {
+
+            top:45,
+
+            left:60,
+
+            panorama:
+                "panoramas/so-04-livingroom.jpg"
+
+        },
+
+
+        kitchen: {
+
+            top:55,
+
+            left:38,
+
+            panorama:
+                "panoramas/so-04-kitchen.jpg"
+
+        },
+
+
+        bedroom: {
+
+            top:72,
+
+            left:25,
+
+            panorama:
+                "panoramas/so-04-bedroom.jpg"
+
+        },
+
+
+        bathroom: {
+
+            top:19,
+
+            left:40,
+
+            panorama:
+                "panoramas/so-04-bathroom.jpg"
+
+        }
+
+    },
+
+
+    /* =================================================
+       SO-05
+    ================================================= */
+
+    5: {
+
+        floorplan:
+            "floorplans/floorplan-05.png",
+
+
+        living: {
+
+            top:55,
+
+            left:53,
+
+            panorama:
+                "panoramas/so-05-livingroom.jpg"
+
+        },
+
+
+        kitchen: {
+
+            top:56,
+
+            left:73,
+
+            panorama:
+                "panoramas/so-05-kitchen.jpg"
+
+        },
+
+
+        bedroom: {
+
+            top:78,
+
+            left:36,
+
+            panorama:
+                "panoramas/so-05-bedroom.jpg"
+
+        },
+
+
+        bathroom: {
+
+            top:17,
+
+            left:75,
+
+            panorama:
+                "panoramas/so-05-bathroom.jpg"
+
+        }
+
+    },
+
+
+    /* =================================================
+       SO-06
+    ================================================= */
+
+    6: {
+
+        floorplan:
+            "floorplans/floorplan-06.png",
+
+
+        living: {
+
+            top:65,
+
+            left:45,
+
+            panorama:
+                "panoramas/so-06-livingroom.jpg"
+
+        },
+
+
+        kitchen: {
+
+            top:68,
+
+            left:62,
+
+            panorama:
+                "panoramas/so-06-kitchen.jpg"
+
+        },
+
+
+        bedroom: {
+
+            top:28,
+
+            left:25,
+
+            panorama:
+                "panoramas/so-06-bedroom.jpg"
+
+        },
+
+
+        bathroom: {
+
+            top:22,
+
+            left:54,
+
+            panorama:
+                "panoramas/so-06-bathroom.jpg"
+
+        }
+
+    },
+
+
+    /* =================================================
+       SO-07
+    ================================================= */
+
+    7: {
+
+        floorplan:
+            "floorplans/floorplan-07.png",
+
+
+        living: {
+
+            top:38,
+
+            left:45,
+
+            panorama:
+                "panoramas/so-07-livingroom.jpg"
+
+        },
+
+
+        kitchen: {
+
+            top:38,
+
+            left:62,
+
+            panorama:
+                "panoramas/so-07-kitchen.jpg"
+
+        },
+
+
+        bedroom: {
+
+            top:80,
+
+            left:28,
+
+            panorama:
+                "panoramas/so-07-bedroom.jpg"
+
+        },
+
+
+        bathroom: {
+
+            top:80,
+
+            left:50,
+
+            panorama:
+                "panoramas/so-07-bathroom.jpg"
+
+        }
+
+    },
+
+
+    /* =================================================
+       SO-08
+    ================================================= */
+
+    8: {
+
+        floorplan:
+            "floorplans/floorplan-08.png",
+
+
+        living: {
+
+            top:45,
+
+            left:45,
+
+            panorama:
+                "panoramas/so-08-livingroom.jpg"
+
+        },
+
+
+        kitchen: {
+
+            top:55,
+
+            left:70,
+
+            panorama:
+                "panoramas/so-08-kitchen.jpg"
+
+        },
+
+
+        bedroom: {
+
+            top:78,
+
+            left:30,
+
+            panorama:
+                "panoramas/so-08-bedroom.jpg"
+
+        },
+
+
+        bathroom: {
+
+            top:20,
+
+            left:40,
+
+            panorama:
+                "panoramas/so-08-bathroom.jpg"
+
+        }
+
+    }
+
+};
+
+
+
+/* =================================================
+   PANORAMA VIEWER
+================================================= */
 
 let viewer = null;
 
@@ -76,70 +817,250 @@ let viewer = null;
 
 function openPanorama(image){
 
+    document
+        .getElementById("panorama-view")
+        .style.display = "block";
 
-document.getElementById("panorama-view").style.display="block";
+
+    if(viewer){
+
+        viewer.destroy();
+
+    }
 
 
+    viewer = pannellum.viewer(
+        "panorama",
+        {
 
-if(viewer){
+            type:"equirectangular",
 
-viewer.destroy();
+            panorama:image,
+
+            autoLoad:true,
+
+            showControls:true,
+
+            mouseZoom:true
+
+        }
+    );
+
+
+    setTimeout(function(){
+
+        if(viewer){
+
+            viewer.resize();
+
+        }
+
+    },500);
 
 }
-
-
-
-viewer = pannellum.viewer("panorama", {
-
-
-type:"equirectangular",
-
-
-panorama:image,
-
-
-autoLoad:true,
-
-
-showControls:true,
-
-
-mouseZoom:true
-
-
-});
-
-
-setTimeout(()=>{
-
-viewer.resize();
-
-},500);
-
-
-}
-
 
 
 
 function closePanorama(){
 
+    document
+        .getElementById("panorama-view")
+        .style.display = "none";
 
-document.getElementById("panorama-view").style.display="none";
 
+    if(viewer){
 
-if(viewer){
+        viewer.destroy();
 
-viewer.destroy();
+        viewer = null;
 
-viewer=null;
+    }
 
 }
 
 
+
+/* =================================================
+   CREATE DOT
+================================================= */
+
+function createDot(
+    wrapper,
+    roomName,
+    roomData
+){
+
+    const dot =
+        document.createElement("div");
+
+
+    dot.className =
+        "dot " + roomName;
+
+
+    dot.style.top =
+        roomData.top + "%";
+
+
+    dot.style.left =
+        roomData.left + "%";
+
+
+    dot.onclick =
+        function(){
+
+            openPanorama(
+                roomData.panorama
+            );
+
+        };
+
+
+    wrapper.appendChild(dot);
+
 }
 
 
+
+/* =================================================
+   CREATE APARTMENT DOTS
+================================================= */
+
+function createApartmentDots(number){
+
+    const wrapper =
+        document.querySelector(
+            ".floorplan-wrapper"
+        );
+
+
+    /* Remove old dots */
+
+    wrapper
+        .querySelectorAll(".dot")
+        .forEach(function(dot){
+
+            dot.remove();
+
+        });
+
+
+    const apartment =
+        apartments[number];
+
+
+    /* Living room */
+
+    createDot(
+        wrapper,
+        "living",
+        apartment.living
+    );
+
+
+    /* Kitchen */
+
+    createDot(
+        wrapper,
+        "kitchen",
+        apartment.kitchen
+    );
+
+
+    /* Bedroom */
+
+    createDot(
+        wrapper,
+        "bedroom",
+        apartment.bedroom
+    );
+
+
+    /* Bathroom */
+
+    createDot(
+        wrapper,
+        "bathroom",
+        apartment.bathroom
+    );
+
+}
+
+
+
+/* =================================================
+   SELECT APARTMENT
+================================================= */
+
+function selectApartment(number){
+
+    const floorplan =
+        document.getElementById(
+            "floorplan"
+        );
+
+
+    const apartment =
+        apartments[number];
+
+
+    /* Change floorplan */
+
+    floorplan.src =
+        apartment.floorplan;
+
+
+    /* Change dots */
+
+    createApartmentDots(number);
+
+
+    /* Highlight thumbnail */
+
+    const apartmentButtons =
+        document.querySelectorAll(
+            ".apartment"
+        );
+
+
+    apartmentButtons.forEach(
+        function(button,index){
+
+            button.classList.toggle(
+                "active",
+                index === number - 1
+            );
+
+        }
+    );
+
+
+    /* Scroll selected thumbnail */
+
+    if(apartmentButtons[number - 1]){
+
+        apartmentButtons[number - 1]
+            .scrollIntoView({
+
+                behavior:"smooth",
+
+                block:"nearest",
+
+                inline:"center"
+
+            });
+
+    }
+
+}
+
+
+
+/* =================================================
+   START WITH SO-01
+================================================= */
+
+selectApartment(1);
 
 </script>
 
